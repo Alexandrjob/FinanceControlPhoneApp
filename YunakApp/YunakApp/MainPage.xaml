@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YunakApp.MainPage">
+
+    <StackLayout BackgroundColor="#F3F3F3">
+        <Frame BackgroundColor="#ffffff" Margin="20,70,20,20" CornerRadius="10" HasShadow="True">
+            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="Black" FontSize="36"/>
+        </Frame>
+        <Label Text="Расходы на сегодня" TextColor="Black" Margin="10,0,0,0"/>
+        <Frame BackgroundColor="#ffffff" Margin="10,10,10,0" CornerRadius="10" HasShadow="True">
+            <Label  HorizontalTextAlignment="Center" TextColor="Black" FontSize="12"/>
+        </Frame>
+        <Frame BackgroundColor="#ffffff" Margin="10,0,10,0" CornerRadius="10" HasShadow="True">
+            <Label  HorizontalTextAlignment="Center" TextColor="Black" FontSize="12"/>
+        </Frame>
+    </StackLayout>
+</ContentPage>

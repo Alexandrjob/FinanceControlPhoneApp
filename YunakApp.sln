@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YunakApp.Android", "YunakApp\YunakApp.Android\YunakApp.Android.csproj", "{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YunakApp", "YunakApp\YunakApp\YunakApp.csproj", "{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3ACFED2-2CCF-4373-93C8-0E3082BDB698}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDAD9FD8-6FBC-4A35-8618-F80FE34FBC14}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F0562B9E-5B63-4F76-94D7-CC2B60C6E2A0}
+	EndGlobalSection
+EndGlobal
