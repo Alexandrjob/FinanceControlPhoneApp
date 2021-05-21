@@ -1,6 +1,6 @@
 ﻿namespace YunakApp.Models
 {
-    class Сategory
+    public class Category
     {
         public string Name { get; set; }
         public Type Type { get; set; }

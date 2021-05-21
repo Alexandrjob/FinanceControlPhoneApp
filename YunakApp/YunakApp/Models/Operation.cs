@@ -2,10 +2,11 @@
 
 namespace YunakApp.Models
 {
-    class Operation
+    public class Operation
     {
         public double Cost { get; set; }
         public DateTime Date { get; set; }
-        public Сategory Category { get; set; }
+        public double PercentageTotalCosts { get; set; }
+        public Category Category { get; set; }
     }
 }

@@ -1,12 +1,13 @@
-﻿using Xamarin.Forms;
+﻿using System.ComponentModel;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace YunakApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class Profile: ContentPage
+    public partial class ProfilePage: ContentPage
     {
-        public Profile()
+        public ProfilePage()
         {
             InitializeComponent();
         }
