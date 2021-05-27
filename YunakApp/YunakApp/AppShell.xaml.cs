@@ -1,4 +1,5 @@
 ﻿using Xamarin.Forms;
+using YunakApp.Views;
 
 namespace YunakApp
 {
@@ -7,6 +8,7 @@ namespace YunakApp
         public AppShell()
         {
             InitializeComponent();
+            Routing.RegisterRoute(nameof(CategoryPage), typeof(CategoryPage));
         }
     }
 }

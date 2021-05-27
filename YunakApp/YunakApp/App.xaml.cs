@@ -1,4 +1,5 @@
 ﻿using Xamarin.Forms;
+using YunakApp.Services;
 
 namespace YunakApp
 {
@@ -8,6 +9,7 @@ namespace YunakApp
         {
             InitializeComponent();
 
+            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:YunakApp.ViewModels"
+             xmlns:model="clr-namespace:YunakApp.Models"
+             x:Class="YunakApp.Views.CategoryPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <CollectionView
+                ItemsSource="{Binding Operations}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Margin="10,10,10,0" x:DataType="model:Operation">
+                            <Frame Margin="10,0,10,0" CornerRadius="10" HasShadow="True">
+                                <Grid Padding="-4">
+                                    <Label Text="{Binding Category.Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
+                                    <Label Text="{Binding PercentageTotalCostsInCategory}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
+                                    <Label Text="{Binding Cost}" HorizontalTextAlignment="End" TextColor="Black" FontSize="16"/>
+                                </Grid>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

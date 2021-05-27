@@ -6,7 +6,7 @@ namespace YunakApp.Models
     {
         public double Cost { get; set; }
         public DateTime Date { get; set; }
-        public double PercentageTotalCosts { get; set; }
+        public double PercentageTotalCostsInCategory { get; set; }
         public Category Category { get; set; }
     }
 }

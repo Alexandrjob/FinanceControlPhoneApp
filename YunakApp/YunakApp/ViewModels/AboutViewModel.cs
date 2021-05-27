@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using YunakApp.Models;
-using YunakApp.Services;
+using YunakApp.Views;
 
 namespace YunakApp.ViewModels
 {
-    class AboutViewModel : INotifyPropertyChanged
+    class AboutViewModel : BaseViewModel
     {
-        public ObservableCollection<Operation> Operations { get; set; }
-        public float PercentageDifferenceFloat { get; set; }
+        #region Property
+        public ObservableCollection<Category> Catigories { get; set; }
 
         public float progressBarVallue;
         public float ProgressBarVallue
@@ -59,17 +57,19 @@ namespace YunakApp.ViewModels
             }
         }
 
-        public MockDataStore DataStore { get; set; }
         public Command LoadDataCommand { get; }
+        public Command<Category> ItemTapped { get; }
+        #endregion
 
         public AboutViewModel()
         {
-            Operations = new ObservableCollection<Operation>();
+            Catigories = new ObservableCollection<Category>();
             UserGeneralInformation = new GeneralInformation();
-            DataStore = new MockDataStore();
+
+            ItemTapped = new Command<Category>(OnItemSelected);
             LoadDataCommand = new Command(async () => await GetData());
 
-            //Task.Run(async () => await GetData());
+            Task.Run(async () => await GetData());
         }
 
         private async Task GetData()
@@ -79,24 +79,24 @@ namespace YunakApp.ViewModels
             User user = await DataStore.GetUserDataAsync();
             UserGeneralInformation = user.GeneralInformation;
 
-            Operations.Clear();
+            Catigories.Clear();
 
-            var operations = await DataStore.GetOperationsDataAsync();
-            foreach (var item in operations)
+            var categories = DataStore.Catigories;
+            foreach (var item in categories)
             {
-                Operations.Add(item);
+                Catigories.Add(item);
             }
-
+           
             IsRefreshing = false;
-            await PbAsync();
+            await SetValueProgressBarAsync();
         }
 
-        private async Task PbAsync()
+        private async Task SetValueProgressBarAsync()
         {
-            await Task.Run(async () => await Pb());
+            await Task.Run(async () => await SetValueProgressBar());
         }
 
-        private async Task Pb()
+        private Task SetValueProgressBar()
         {
             for (int i = 0; i < 170; i++)
             {
@@ -104,11 +104,10 @@ namespace YunakApp.ViewModels
                 Thread.Sleep(1);
             }
 
-            PercentageDifferenceFloat = (float)(UserGeneralInformation.MonthlyConsumption / (UserGeneralInformation.MonthlyIncome / 100) / 100);
-            //userGeneralInformation.PercentageDifference = (int)(UserGeneralInformation.MonthlyConsumption / (UserGeneralInformation.MonthlyIncome / 100));
+            var percentageDifferenceFloat = (double)(UserGeneralInformation.MonthlyConsumption / (UserGeneralInformation.MonthlyIncome / 100) / 100);
             for (int i = 0; i < 250; i++)
             {
-                if (ProgressBarVallue + 0.004f <= PercentageDifferenceFloat)
+                if (ProgressBarVallue + 0.004f <= percentageDifferenceFloat)
                 {
                     ProgressBarVallue += 0.004f;
                     Thread.Sleep(1);
@@ -118,14 +117,17 @@ namespace YunakApp.ViewModels
                     break;
                 }
             }
+
+            return Task.CompletedTask;
         }
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propName)
+        private async void OnItemSelected(Category category)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+            if (category == null)
+                return;
+            var nameCategory = category.Name;
+            var typeStr = ((int)category.Type).ToString();
+            await Shell.Current.GoToAsync($"{nameof(CategoryPage)}?name={nameCategory}&type={typeStr}");
         }
-        #endregion
     }
 }

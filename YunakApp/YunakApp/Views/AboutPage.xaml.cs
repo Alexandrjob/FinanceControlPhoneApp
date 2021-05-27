@@ -1,8 +1,7 @@
-﻿
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 using YunakApp.ViewModels;
 
-namespace YunakApp
+namespace YunakApp.Views
 {
     public partial class AboutPage : ContentPage
     {
@@ -11,9 +10,6 @@ namespace YunakApp
             InitializeComponent();
 
             BindingContext = new AboutViewModel();
-
-            ProgressBar progressBar = new ProgressBar { Progress = 0.5f };
-            progressBar.ProgressTo(0.75, 1500, Easing.Linear);
         }
     }
 }

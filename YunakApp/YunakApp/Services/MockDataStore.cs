@@ -7,6 +7,7 @@ using System.Text.Unicode;
 using YunakApp.Models;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Linq;
 
 namespace YunakApp.Services
 {
@@ -14,9 +15,16 @@ namespace YunakApp.Services
     {
         private readonly string OPERATIONSFILEPATCH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "operations.json");
         private readonly string USERSFILEPATCH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "user.json");
-        private User User;
 
-        private async Task CreateOrWriteFileIfEmpty<T>(string filePatch, Func<T> func)
+        private User User;
+        private List<Operation> Operations;
+        public List<Category> Catigories { get; set; }
+
+        public MockDataStore()
+        {
+            Task.Run(async () => await GetOperationsDataAsync());
+        }
+        private async Task CreateOrWriteFileIfEmpty<T>(string filePatch, Func<Task<T>> func)
         {
             var options = new JsonSerializerOptions
             {
@@ -27,7 +35,7 @@ namespace YunakApp.Services
             using (var fs = new FileStream(filePatch, FileMode.Create))
             {
 
-                var data =  func();
+                var data = await func();
                 await JsonSerializer.SerializeAsync(fs, data, options);
 
             }
@@ -35,7 +43,7 @@ namespace YunakApp.Services
 
         public async Task<IEnumerable<Operation>> GetOperationsDataAsync()
         {
-            await CreateOrWriteFileIfEmpty(OPERATIONSFILEPATCH, InitializeOperations);
+            await CreateOrWriteFileIfEmpty(OPERATIONSFILEPATCH, InitializeOperationsAsync);
 
             try
             {
@@ -53,7 +61,7 @@ namespace YunakApp.Services
 
         public async Task<User> GetUserDataAsync()
         {
-            await CreateOrWriteFileIfEmpty(USERSFILEPATCH, InitializeUser);
+            await CreateOrWriteFileIfEmpty(USERSFILEPATCH, InitializeUserAsync);
 
             try
             {
@@ -79,34 +87,72 @@ namespace YunakApp.Services
             return await Task.Run(() => InitializeUser());
         }
 
-        public List<Operation> InitializeOperations()
+        private List<Operation> InitializeOperations()
         {
             Random random = new Random();
 
-            List<Operation> operations = new List<Operation>();
+            Operations = new List<Operation>();
+
+            Category category1 = new Category()
+            {
+                Name = "Транспорт",
+                Type = Models.Type.consumption
+            };
+            Category category2 = new Category()
+            {
+                Name = "Еда",
+                Type = Models.Type.consumption
+            };
+            Category category3 = new Category()
+            {
+                Name = "Ресторан",
+                Type = Models.Type.consumption
+            };
+
+            var categories = new Category[3];
+            categories[0] = category1;
+            categories[1] = category2;
+            categories[2] = category3;
 
             for (int i = 0; i < 18; i++)
             {
-                Category category = new Category()
-                {
-                    Name = "Транспорт" + i,
-                    Type = Models.Type.income + random.Next(0, 2)
-                };
-
                 Operation operation = new Operation()
                 {
-                    Cost = random.Next(10, 1000),
+                    Cost = random.Next(100, 10000),
                     Date = DateTime.Now,
-                    Category = category
+                    Category = categories[random.Next(0, 3)]
                 };
-                operation.PercentageTotalCosts = Math.Round(operation.Cost * (100 / User.GeneralInformation.MonthlyConsumption), 2);
-
-                operations.Add(operation);
+                Operations.Add(operation);
             }
-            return operations;
+
+            Catigories = new List<Category>(categories);
+            foreach (var item in Operations)
+            {
+                var category = Catigories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
+                if (category != null)
+                {
+                    category.Cost += item.Cost;
+                    continue;
+                }
+
+                Catigories.Add(item.Category);
+                item.Category.Cost += item.Cost;
+            }
+
+            foreach (var item in Catigories)
+            {
+                item.PercentageTotalCosts = Math.Round(item.Cost / (User.GeneralInformation.MonthlyConsumption / 100), 1);
+            }
+
+            foreach (var item in Operations)
+            {
+                item.PercentageTotalCostsInCategory = Math.Round(item.Cost / (item.Category.Cost / 100), 2);
+            }
+
+            return Operations;
         }
 
-        public User InitializeUser()
+        private User InitializeUser()
         {
             Random random = new Random();
 
@@ -128,5 +174,9 @@ namespace YunakApp.Services
             return user;
         }
 
+        public async Task<List<Operation>> GetCategoryOperations(string NameCategory, Models.Type type)
+        {
+            return await Task.FromResult(Operations.Where(o => o.Category.Type == type && o.Category.Name == NameCategory).OrderByDescending(o => o.Cost).ToList());
+        }
     }
 }
