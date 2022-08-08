@@ -3,36 +3,59 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:YunakApp.ViewModels"
              xmlns:model="clr-namespace:YunakApp.Models"
-             x:Class="YunakApp.Views.AboutPage">
+             x:Class="YunakApp.Views.AboutPage"
+             >
     <StackLayout>
         <StackLayout>
-            <Frame BackgroundColor="#ffffff" Margin="20,20,20,20" Padding="1" CornerRadius="10" HasShadow="True">
-                <Grid HeightRequest="100">
+            <Frame BackgroundColor="#ffffff" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
+                <Grid HeightRequest="280">
                     <StackLayout Margin="10" VerticalOptions="CenterAndExpand" x:DataType="local:AboutViewModel" >
                         <Grid>
-                            <Label HorizontalTextAlignment="Start" TextColor="Black" FontSize="Large">
+                            <Label Text="Доход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}" />
-                                        <Span Text="/"/>
-                                        <Span Text="{Binding UserGeneralInformation.PercentageDifference}"/>
-                                        <Span Text="%"/>
+                                        <Span Text="{Binding UserGeneralInformation.MonthlyIncome}"/>
+                                        <Span Text="₽"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
-                            <Label Text="{Binding UserGeneralInformation.MonthlyIncome}" HorizontalTextAlignment="End" TextColor="Black" FontSize="Large"/>
                         </Grid>
-                        <ProgressBar x:DataType="local:AboutViewModel" Progress="{Binding ProgressBarVallue}" ProgressColor="Orange"
+                        <Grid>
+                            <Label Text="Расход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}"/>
+                                        <Span Text="₽"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                        <Grid>
+                            <Label Text="Остаток" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding UserGeneralInformation.Balance}"/>
+                                        <Span Text="₽"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                        <ProgressBar x:DataType="local:AboutViewModel" Progress="{Binding ProgressBarVallue}" ProgressColor="Green"
                             HeightRequest="4"/>
                     </StackLayout>
                 </Grid>
             </Frame>
         </StackLayout>
-        <Label Padding="10,0,10,0" Text="Расходы" TextColor="Black" />
-
-        <RefreshView x:DataType="local:AboutViewModel" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
+        <FlexLayout Direction="Row" JustifyContent="SpaceBetween" HeightRequest="40">
+            <Button x:DataType="local:AboutViewModel" x:Name="SwapButton" Text="Расходы" TextTransform="None" Command="{Binding SwapCommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="100" Padding="10" Margin="10,0,10,0" BorderRadius="10" BorderWidth="2" BorderColor="Black" />
+            <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" BackgroundColor="#ffffff" FontSize="Medium" TextColor="Black" WidthRequest="50" BorderRadius="10" Padding="10,0,10,0" Margin="10,0,10,0" BorderWidth="2" BorderColor="Black" />
+        </FlexLayout>
+        <RefreshView x:DataType="local:AboutViewModel" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" RefreshColor="Green">
             <CollectionView 
-                ItemsSource="{Binding Catigories}"
+                ItemsSource="{Binding Categories}"
                 SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
@@ -51,7 +74,7 @@
                                     <Label HorizontalTextAlignment="End" TextColor="Black" FontSize="16">
                                         <Label.FormattedText>
                                             <FormattedString>
-                                                <Span Text="{Binding Cost}"/>
+                                                <Span Text="{Binding TotalMoney}"/>
                                                 <Span Text="₽"/>
                                             </FormattedString>
                                         </Label.FormattedText>
@@ -61,7 +84,7 @@
                             <StackLayout.GestureRecognizers>
                                 <TapGestureRecognizer 
                                 NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AboutViewModel}} , Path=ItemTapped}"		
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AboutViewModel}} , Path=ItemTappedCommand}"		
                                 CommandParameter="{Binding .}">
                                 </TapGestureRecognizer>
                             </StackLayout.GestureRecognizers>
@@ -70,6 +93,5 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
         </RefreshView>
-
     </StackLayout>
 </ContentPage>

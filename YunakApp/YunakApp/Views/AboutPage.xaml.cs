@@ -8,8 +8,7 @@ namespace YunakApp.Views
         public AboutPage()
         {
             InitializeComponent();
-
-            BindingContext = new AboutViewModel();
+            BindingContext = new AboutViewModel(SwapButton);
         }
     }
 }

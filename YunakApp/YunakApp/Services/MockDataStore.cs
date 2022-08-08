@@ -11,19 +11,19 @@ using System.Linq;
 
 namespace YunakApp.Services
 {
+    /// <summary>
+    /// Класс имитации базы данных.
+    /// </summary>
     public class MockDataStore
     {
+        private readonly string CATEGORIESFILEPATCH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "categories.json");
         private readonly string OPERATIONSFILEPATCH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "operations.json");
         private readonly string USERSFILEPATCH = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "user.json");
 
-        private User User;
+        private List<Category> Categories;
         private List<Operation> Operations;
-        public List<Category> Catigories { get; set; }
+        private User User;
 
-        public MockDataStore()
-        {
-            Task.Run(async () => await GetOperationsDataAsync());
-        }
         private async Task CreateOrWriteFileIfEmpty<T>(string filePatch, Func<Task<T>> func)
         {
             var options = new JsonSerializerOptions
@@ -34,10 +34,28 @@ namespace YunakApp.Services
 
             using (var fs = new FileStream(filePatch, FileMode.Create))
             {
-
                 var data = await func();
                 await JsonSerializer.SerializeAsync(fs, data, options);
+            }
+        }
 
+        public async Task<IEnumerable<Category>> GetCategoryDataAsync()
+        {
+            //Без операций не будет работать, а в других местах происходит рассинхрон.Костыль
+           //await GetOperationsDataAsync();
+           await CreateOrWriteFileIfEmpty(CATEGORIESFILEPATCH, InitializeCategoriesAsync);
+
+            try
+            {
+                using (var fs = new FileStream(CATEGORIESFILEPATCH, FileMode.Open))
+                {
+                    return await JsonSerializer.DeserializeAsync<IEnumerable<Category>>(fs);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Ошибка чтения json файла  " + e.Message);
+                return new List<Category>();
             }
         }
 
@@ -77,21 +95,24 @@ namespace YunakApp.Services
             }
         }
 
-        private async Task<List<Operation>> InitializeOperationsAsync()
+        public async Task<List<Category>> InitializeCategoriesAsync()
+        {
+            return await Task.Run(() => InitializeCategories());
+        }
+
+        public async Task<List<Operation>> InitializeOperationsAsync()
         {
             return await Task.Run(() => InitializeOperations());
         }
 
-        private async Task<User> InitializeUserAsync()
+        public async Task<User> InitializeUserAsync()
         {
             return await Task.Run(() => InitializeUser());
         }
 
-        private List<Operation> InitializeOperations()
+        private List<Category> InitializeCategories()
         {
             Random random = new Random();
-
-            Operations = new List<Operation>();
 
             Category category1 = new Category()
             {
@@ -108,46 +129,69 @@ namespace YunakApp.Services
                 Name = "Ресторан",
                 Type = Models.Type.consumption
             };
+            Category category4 = new Category()
+            {
+                Name = "Без категории",
+                Type = Models.Type.consumption
+            };
 
-            var categories = new Category[3];
-            categories[0] = category1;
-            categories[1] = category2;
-            categories[2] = category3;
+            var categoriesArray = new Category[4];
+            categoriesArray[0] = category1;
+            categoriesArray[1] = category2;
+            categoriesArray[2] = category3;
+            categoriesArray[3] = category4;
 
+            //Высчитываю итоговую сумму на категорию.
+            Categories = new List<Category>(categoriesArray);
+
+            foreach (var item in Operations)
+            {
+                item.Category = categoriesArray[random.Next(0, 4)];
+                var category = Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
+                if (category != null)
+                {
+                    Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault().TotalMoney += item.Cost;
+                    continue;
+                }
+
+                item.Category.TotalMoney += item.Cost;
+                Categories.Add(item.Category);
+            }
+
+            foreach (var item in Categories)
+            {
+                item.PercentageTotalCosts = Math.Round(item.TotalMoney / (User.GeneralInformation.MonthlyConsumption / 100), 1);
+            }
+
+            return Categories;
+        }
+
+        private List<Operation> InitializeOperations()
+        {
+            Random random = new Random();
+
+            Category category = new Category()
+            {
+                Name = "Без категории",
+                Type = Models.Type.consumption
+            };
+
+            Operations = new List<Operation>();
             for (int i = 0; i < 18; i++)
             {
                 Operation operation = new Operation()
                 {
                     Cost = random.Next(100, 10000),
                     Date = DateTime.Now,
-                    Category = categories[random.Next(0, 3)]
+                    Category = category
                 };
                 Operations.Add(operation);
             }
 
-            Catigories = new List<Category>(categories);
-            foreach (var item in Operations)
-            {
-                var category = Catigories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
-                if (category != null)
-                {
-                    category.Cost += item.Cost;
-                    continue;
-                }
-
-                Catigories.Add(item.Category);
-                item.Category.Cost += item.Cost;
-            }
-
-            foreach (var item in Catigories)
-            {
-                item.PercentageTotalCosts = Math.Round(item.Cost / (User.GeneralInformation.MonthlyConsumption / 100), 1);
-            }
-
-            foreach (var item in Operations)
-            {
-                item.PercentageTotalCostsInCategory = Math.Round(item.Cost / (item.Category.Cost / 100), 2);
-            }
+            //foreach (var item in Operations)
+            //{
+            //    item.PercentageTotalCostsInCategory = Math.Round(item.Cost / (item.Category.TotalMoney / 100), 2);
+            //}
 
             return Operations;
         }

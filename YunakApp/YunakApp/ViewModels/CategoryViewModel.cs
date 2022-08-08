@@ -12,6 +12,7 @@ namespace YunakApp.ViewModels
     class CategoryViewModel : BaseViewModel, IQueryAttributable
     {
         private ObservableCollection<Operation> operations;
+
         public ObservableCollection<Operation> Operations
         {
             get => operations;

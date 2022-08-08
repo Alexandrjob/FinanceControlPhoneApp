@@ -9,6 +9,9 @@ namespace YunakApp.ViewModels
 {
     class BaseViewModel: INotifyPropertyChanged
     {
+        /// <summary>
+        /// Класс базы данных.
+        /// </summary>
         public MockDataStore DataStore => DependencyService.Get<MockDataStore>();
 
         protected bool SetProperty<T>(ref T backingStore, T value,
