@@ -23,7 +23,7 @@ namespace YunakApp.Repository
         {
             ObservableCollection<Category> Categories = new ObservableCollection<Category>();
             //var categories = await DataStore.GetCategoryDataAsync();
-            var categories = await DataStore.InitializeCategoriesAsync();
+            var categories = DataStore.GetCategories();
 
             foreach (var item in categories)
             {

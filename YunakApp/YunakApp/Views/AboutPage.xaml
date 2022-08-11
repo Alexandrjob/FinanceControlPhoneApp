@@ -32,6 +32,7 @@
                                 </Label.FormattedText>
                             </Label>
                         </Grid>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
                         <Grid>
                             <Label Text="Остаток" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
                             <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
@@ -50,8 +51,15 @@
             </Frame>
         </StackLayout>
         <FlexLayout Direction="Row" JustifyContent="SpaceBetween" HeightRequest="40">
-            <Button x:DataType="local:AboutViewModel" x:Name="SwapButton" Text="Расходы" TextTransform="None" Command="{Binding SwapCommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="100" Padding="10" Margin="10,0,10,0" BorderRadius="10" BorderWidth="2" BorderColor="Black" />
-            <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" BackgroundColor="#ffffff" FontSize="Medium" TextColor="Black" WidthRequest="50" BorderRadius="10" Padding="10,0,10,0" Margin="10,0,10,0" BorderWidth="2" BorderColor="Black" />
+            <Frame CornerRadius="10" HasShadow="True" WidthRequest="100" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                <Button x:DataType="local:AboutViewModel" x:Name="SwapButton" Text="Расходы" TextTransform="None" Command="{Binding SwapCommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
+            </Frame>
+            <Frame CornerRadius="10" HasShadow="True" WidthRequest="90" Padding="-1,0,-1,0" Margin="-110,0,10,0">
+                <Button x:DataType="local:AboutViewModel" Text="Период" TextTransform="None" Command="{Binding SortByDateTimecommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
+            </Frame>
+            <Frame CornerRadius="10" HasShadow="True" WidthRequest="50" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" BackgroundColor="#ffffff" FontSize="Medium" TextColor="Black" BorderRadius="10" Padding="10,0,10,0"/>
+            </Frame>
         </FlexLayout>
         <RefreshView x:DataType="local:AboutViewModel" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" RefreshColor="Green">
             <CollectionView 

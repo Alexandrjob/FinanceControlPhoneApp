@@ -1,6 +1,6 @@
 ﻿using Rg.Plugins.Popup.Services;
-
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,9 +12,11 @@ using YunakApp.Views;
 
 namespace YunakApp.ViewModels
 {
-    class AboutViewModel : BaseViewModel
+    public class AboutViewModel : BaseViewModel
     {
         #region Property
+        readonly EnterPeroidPopupPage EnterPeroidPopupPage;
+
         private readonly ICategoryRepository _categoryRepository;
         private readonly IOperationRepository _operationRepository;
         private readonly IUserRepository _userRepository;
@@ -71,10 +73,13 @@ namespace YunakApp.ViewModels
         public Command<Category> ItemTappedCommand { get; }
         public Command SwapCommand { get; }
         public Command AddCategoryCommand { get; }
+        public Command SortByDateTimecommand { get; }
         #endregion
 
         public AboutViewModel(Button button)
         {
+            EnterPeroidPopupPage = new EnterPeroidPopupPage(this);
+
             _categoryRepository = new CategoryRepository(DataStore);
             _operationRepository = new OperationRepository(DataStore);
             _userRepository = new UserRepository(DataStore);
@@ -88,7 +93,7 @@ namespace YunakApp.ViewModels
             LoadDataCommand = new Command(async () => await GetData());
             SwapCommand = new Command(OnButtonClickedSwapIncomeConsumption);
             AddCategoryCommand = new Command(OnButtonClickedAddCategory);
-
+            SortByDateTimecommand = new Command(OnButtonSortByDateTimeAsync);
             Task.Run(async () => await GetData());
         }
 
@@ -143,7 +148,11 @@ namespace YunakApp.ViewModels
                 return;
             var nameCategory = category.Name;
             var typeStr = ((int)category.Type).ToString();
-            await Shell.Current.GoToAsync($"{nameof(CategoryPage)}?name={nameCategory}&type={typeStr}");
+            var dateTimeStartSort = EnterPeroidPopupPage.DateTimeStart;
+            var dateTimeEndSort = EnterPeroidPopupPage.DateTimeEnd;
+
+            var result = $"{nameof(CategoryPage)}?name={nameCategory}&type={typeStr}&dateTimeSs={dateTimeStartSort.ToShortDateString()}&dateTimeEs={dateTimeEndSort.ToShortDateString()}";
+            await Shell.Current.GoToAsync(result);
         }
 
         private void OnButtonClickedSwapIncomeConsumption()
@@ -162,6 +171,32 @@ namespace YunakApp.ViewModels
             var page = new AddCategoryPopupPage();
 
             await PopupNavigation.Instance.PushAsync(page);
+        }
+
+        private async void OnButtonSortByDateTimeAsync(object obj)
+        {
+
+            await PopupNavigation.Instance.PushAsync(EnterPeroidPopupPage);
+        }
+
+        public async Task SortByDateTimeAsync()
+        {
+            var dateTimeStart = EnterPeroidPopupPage.DateTimeStart.Date;
+            var dateTimeEnd = EnterPeroidPopupPage.DateTimeEnd.Date;
+
+            var operations = await _operationRepository.GetOperationsAsync();
+
+            //TODO: Это выражение нужно сразу отправлять на сервер, либо сортировать что уже есть на телефоне.
+            var sortOperations = DataStore.SortOperations = operations.Where(o => o.Date < dateTimeEnd & o.Date > dateTimeStart).ToList();
+            Categories.Clear();
+
+            foreach (var item in sortOperations)
+            {
+                if (!Categories.Any(c => c.Name == item.Category.Name))
+                {
+                    Categories.Add(item.Category);
+                }
+            }
         }
     }
 }

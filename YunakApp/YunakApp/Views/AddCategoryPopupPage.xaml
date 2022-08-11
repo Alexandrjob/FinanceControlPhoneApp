@@ -7,7 +7,6 @@
     xmlns:local="clr-namespace:YunakApp.ViewModels"
     x:Class="YunakApp.Views.AddCategoryPopupPage"
     >
-    <!--You can set an animation in the xaml file or in the csharp code behind-->
     <pages:PopupPage.Animation>
         <animations:ScaleAnimation 
             PositionIn="Center"

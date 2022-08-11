@@ -6,16 +6,54 @@
              x:Class="YunakApp.Views.CategoryPage">
     <ContentPage.Content>
         <StackLayout>
+            <ContentView>
+                <Frame BackgroundColor="#ffffff" HeightRequest="150" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
+                    <StackLayout Margin="10" VerticalOptions="CenterAndExpand" x:DataType="local:AboutViewModel" >
+                        <Grid>
+                            <Label x:Name="LabelType" Text="Расход/Доход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}"/>
+                                        <Span Text="₽"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
+                        <Grid x:Name="GridLabelBalance">
+                            <Label Text="Остаток" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding UserGeneralInformation.Balance}"/>
+                                        <Span Text="₽"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                        <ProgressBar x:Name="ProgressBarBalance" x:DataType="local:AboutViewModel" Progress="{Binding ProgressBarVallue}" ProgressColor="#ffafff"
+                            HeightRequest="4"/>
+                    </StackLayout>
+                </Frame>
+            </ContentView>
+
+            <FlexLayout Direction="Row" JustifyContent="End" HeightRequest="40">
+                <Frame CornerRadius="10" HasShadow="True" WidthRequest="52" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                    <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" HorizontalOptions="Fill" FontSize="Medium" TextColor="Black" Padding="0,0,0,0" BackgroundColor="#ffffff"/>
+                </Frame>
+            </FlexLayout>
+
             <CollectionView
                 ItemsSource="{Binding Operations}"
                 SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Margin="10,10,10,0" x:DataType="model:Operation">
-                            <Frame Margin="10,0,10,0" CornerRadius="10" HasShadow="True">
+                        <StackLayout Margin="10,5,10,0" x:DataType="model:Operation">
+                            <Frame Margin="10,5,10,0" CornerRadius="10" HasShadow="True" >
                                 <Grid Padding="-4">
                                     <Label Text="{Binding Category.Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
-                                    <Label Text="{Binding PercentageTotalCostsInCategory}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
+                                    <Label Text="{Binding Date, StringFormat='{0:dd.mm.yyyy}'}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
                                     <Label Text="{Binding Cost}" HorizontalTextAlignment="End" TextColor="Black" FontSize="16"/>
                                 </Grid>
                             </Frame>

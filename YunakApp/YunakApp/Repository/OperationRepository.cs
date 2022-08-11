@@ -20,13 +20,18 @@ namespace YunakApp.Repository
         /// <summary>
         /// Получает список операций пользователя.
         /// </summary>
-        /// <returns><see cref="IEnumerable{Category}"/><see cref="Category"/></returns>
-        public async Task<IEnumerable<Operation>> GetOperationsAsync()
+        /// <returns><see cref="List{Category}"/><see cref="Category"/></returns>
+        public async Task<List<Operation>> GetOperationsAsync()
         {
             //await DataStore.GetOperationsDataAsync();
-            var operations = await DataStore.InitializeOperationsAsync();
+            var operations = DataStore.GetOperations();
             //return await DataStore.GetOperationsDataAsync();
             return operations;
+        }
+
+        public Task<List<Operation>> GetOperationsSortedByDateAsync(DateTime dateStart, DateTime dateEnd)
+        {
+            throw new NotImplementedException();
         }
     }
 }

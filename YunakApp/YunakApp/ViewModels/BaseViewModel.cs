@@ -7,7 +7,7 @@ using YunakApp.Services;
 
 namespace YunakApp.ViewModels
 {
-    class BaseViewModel: INotifyPropertyChanged
+    public class BaseViewModel: INotifyPropertyChanged
     {
         /// <summary>
         /// Класс базы данных.

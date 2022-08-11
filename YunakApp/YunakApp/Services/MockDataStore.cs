@@ -24,6 +24,19 @@ namespace YunakApp.Services
         private List<Operation> Operations;
         private User User;
 
+        public List<Operation> SortOperations { get; set; }
+
+        public MockDataStore()
+        {
+            Categories = new List<Category>();
+            Operations = new List<Operation>();
+            User = new User();
+
+            InitializeOperations();
+            InitializeUser();
+            InitializeCategories();
+        }
+
         private async Task CreateOrWriteFileIfEmpty<T>(string filePatch, Func<Task<T>> func)
         {
             var options = new JsonSerializerOptions
@@ -39,11 +52,11 @@ namespace YunakApp.Services
             }
         }
 
-        public async Task<IEnumerable<Category>> GetCategoryDataAsync()
+        private async Task<IEnumerable<Category>> GetCategoryDataAsync()
         {
             //Без операций не будет работать, а в других местах происходит рассинхрон.Костыль
-           //await GetOperationsDataAsync();
-           await CreateOrWriteFileIfEmpty(CATEGORIESFILEPATCH, InitializeCategoriesAsync);
+            //await GetOperationsDataAsync();
+            await CreateOrWriteFileIfEmpty(CATEGORIESFILEPATCH, InitializeCategoriesAsync);
 
             try
             {
@@ -59,7 +72,7 @@ namespace YunakApp.Services
             }
         }
 
-        public async Task<IEnumerable<Operation>> GetOperationsDataAsync()
+        private async Task<IEnumerable<Operation>> GetOperationsDataAsync()
         {
             await CreateOrWriteFileIfEmpty(OPERATIONSFILEPATCH, InitializeOperationsAsync);
 
@@ -77,7 +90,7 @@ namespace YunakApp.Services
             }
         }
 
-        public async Task<User> GetUserDataAsync()
+        private async Task<User> GetUserDataAsync()
         {
             await CreateOrWriteFileIfEmpty(USERSFILEPATCH, InitializeUserAsync);
 
@@ -146,7 +159,7 @@ namespace YunakApp.Services
 
             foreach (var item in Operations)
             {
-                item.Category = categoriesArray[random.Next(0, 4)];
+                item.Category = categoriesArray[random.Next(0, 3)];
                 var category = Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
                 if (category != null)
                 {
@@ -177,12 +190,12 @@ namespace YunakApp.Services
             };
 
             Operations = new List<Operation>();
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < 38; i++)
             {
                 Operation operation = new Operation()
                 {
                     Cost = random.Next(100, 10000),
-                    Date = DateTime.Now,
+                    Date = DateTime.Now.AddDays(random.Next(-30, 30)),
                     Category = category
                 };
                 Operations.Add(operation);
@@ -218,7 +231,23 @@ namespace YunakApp.Services
             return user;
         }
 
-        public async Task<List<Operation>> GetCategoryOperations(string NameCategory, Models.Type type)
+        public List<Category> GetCategories()
+        {
+            return Categories;
+        }
+
+        public List<Operation> GetOperations()
+        {
+            return Operations;
+        }
+
+        public User GetUser()
+        {
+            return User;
+
+        }
+
+        public async Task<List<Operation>> GetCategoryOperationsAsync(string NameCategory, Models.Type type)
         {
             return await Task.FromResult(Operations.Where(o => o.Category.Type == type && o.Category.Name == NameCategory).OrderByDescending(o => o.Cost).ToList());
         }

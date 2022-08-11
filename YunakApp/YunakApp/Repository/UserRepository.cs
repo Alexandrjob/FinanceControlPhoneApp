@@ -20,7 +20,7 @@ namespace YunakApp.Repository
         /// <returns><see cref="GeneralInformation"/></returns>
         public async Task<GeneralInformation> GetGeneralInformation()
         {
-            var user = await DataStore.InitializeUserAsync();
+            var user = DataStore.GetUser();
             //User user = await DataStore.GetUserDataAsync();
             return user.GeneralInformation;
         }

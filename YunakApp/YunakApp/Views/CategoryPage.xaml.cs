@@ -11,7 +11,7 @@ namespace YunakApp.Views
         {
             InitializeComponent();
 
-            BindingContext = new CategoryViewModel();
+            BindingContext = new CategoryViewModel(LabelType, GridLabelBalance, ProgressBarBalance);
         }
     }
 }
