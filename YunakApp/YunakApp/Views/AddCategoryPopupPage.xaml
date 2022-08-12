@@ -24,12 +24,16 @@
             <Grid HeightRequest="270">
                 <StackLayout Margin="10">
                     <Label Text="Название категории" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
-                    <Entry Placeholder="Введите название" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
+                    <Entry x:Name="name" Placeholder="Введите название" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
+                    <Label Text="Выберите тип категории" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                    <Picker x:Name="picker" SelectedIndexChanged="picker_SelectedIndexChanged" Title="Выберите что нибуть">
+                        <Picker.Items>
+                            <x:String>Доход</x:String>
+                            <x:String>Расход</x:String>
+                        </Picker.Items>
+                    </Picker>
 
-                    <Label Text="Введите затраты" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
-                    <Entry Placeholder="Введите сумму" Keyboard="Numeric" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
-
-                    <Button x:DataType="local:AboutViewModel" Command="{Binding }" Text="Добавить" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="120" HeightRequest="40" HorizontalOptions="End" BorderRadius="10" Padding="10,0,10,0" BorderWidth="2" BorderColor="Black"/>
+                    <Button Clicked="Button_Clicked" Text="Добавить" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="120" HeightRequest="40" HorizontalOptions="End" BorderRadius="10" Padding="10,0,10,0" BorderWidth="2" BorderColor="Black"/>
                 </StackLayout>
             </Grid>
         </Frame>

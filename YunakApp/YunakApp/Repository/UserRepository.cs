@@ -14,10 +14,6 @@ namespace YunakApp.Repository
             DataStore = store;
         }
 
-        /// <summary>
-        /// Получает Информацию о доходах и расходах пользователя.
-        /// </summary>
-        /// <returns><see cref="GeneralInformation"/></returns>
         public async Task<GeneralInformation> GetGeneralInformation()
         {
             var user = DataStore.GetUser();

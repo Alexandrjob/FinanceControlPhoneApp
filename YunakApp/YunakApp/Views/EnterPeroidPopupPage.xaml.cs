@@ -16,19 +16,16 @@ namespace YunakApp.Views
 
         public EnterPeroidPopupPage(AboutViewModel aboutview)
         {
-            InitializeComponent();
-
             DateTime now = DateTime.Now;
             DateTimeStart = new DateTime(now.Year, now.Month, 1);
             DateTimeEnd = new DateTime(now.Year, now.Month + 1, 1).AddDays(-1);
 
-            AboutView = aboutview;
-        }
+            InitializeComponent();
 
-        protected override bool OnBackgroundClicked()
-        {
-            // Return false if you don't want to close this popup page when a background of the popup page is clicked
-            return base.OnBackgroundClicked();
+            dateTimeStart.Date = DateTimeStart;
+            dateTimeEnd.Date = DateTimeEnd;
+
+            AboutView = aboutview;
         }
 
         private async void Button_Clicked(object sender, EventArgs e)
@@ -39,6 +36,11 @@ namespace YunakApp.Views
 
             //Выходим с попапа.
             await PopupNavigation.Instance.PopAsync();          
+        }
+
+        protected override bool OnBackgroundClicked()
+        {
+            return base.OnBackgroundClicked();
         }
     }
 }

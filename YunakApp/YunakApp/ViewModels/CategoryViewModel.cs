@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Rg.Plugins.Popup.Services;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Xamarin.Forms;
 using YunakApp.Models;
+using YunakApp.Views;
 
 namespace YunakApp.ViewModels
 {
@@ -15,6 +16,8 @@ namespace YunakApp.ViewModels
         readonly Label labelType;
         readonly Grid gridBalance;
         readonly ProgressBar progressBarBalance;
+
+        private string nameCurrentCategory;
 
         private ObservableCollection<Operation> operations;
 
@@ -28,11 +31,15 @@ namespace YunakApp.ViewModels
             }
         }
 
+        public Command AddOperationCommand { get; }
+
         public CategoryViewModel(Label label, Grid grid, ProgressBar progressBar)
         {
             labelType = label;
             gridBalance = grid;
             progressBarBalance = progressBar;
+
+            AddOperationCommand = new Command(OnButtonClikedAddOperation);
         }
 
         public void ApplyQueryAttributes(IDictionary<string, string> query)
@@ -44,7 +51,7 @@ namespace YunakApp.ViewModels
         {
             Operations = new ObservableCollection<Operation>();
 
-            string categoryName = HttpUtility.UrlDecode(query["name"]);
+            string categoryName = nameCurrentCategory = HttpUtility.UrlDecode(query["name"]);
             Models.Type type = (Models.Type)Convert.ToInt32(HttpUtility.UrlDecode(query["type"]));
             var dateTimeStart = Convert.ToDateTime(query["dateTimeSs"]);
             var dateTimeEnd = Convert.ToDateTime(query["dateTimeEs"]);
@@ -53,9 +60,8 @@ namespace YunakApp.ViewModels
 
             try
             {
-                var operations = await DataStore.GetCategoryOperationsAsync(categoryName, type);
-                //TODO:
-                operations = operations.Where(o => o.Date < dateTimeEnd & o.Date > dateTimeStart).ToList();
+                var operations = await _operationRepository.GetCategoryOperationsSortedByDateAsync(categoryName, type, dateTimeStart, dateTimeEnd);
+
                 foreach (var item in operations)
                 {
                     Operations.Add(item);
@@ -63,7 +69,7 @@ namespace YunakApp.ViewModels
             }
             catch (Exception)
             {
-                Debug.WriteLine("Failed to Load category operations");
+                Debug.WriteLine("Failed to load category operations");
             }
         }
 
@@ -79,6 +85,13 @@ namespace YunakApp.ViewModels
                 gridBalance.IsVisible = !gridBalance.IsVisible;
                 progressBarBalance.IsVisible = !progressBarBalance.IsVisible;
             }
+        }
+
+        private async void OnButtonClikedAddOperation()
+        {
+            var page = new AddOperationPopupPage(_operationRepository, nameCurrentCategory);
+
+            await PopupNavigation.Instance.PushAsync(page);
         }
     }
 }

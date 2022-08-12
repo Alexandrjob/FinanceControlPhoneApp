@@ -8,6 +8,7 @@ using YunakApp.Models;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Linq;
+using Xamarin.Forms;
 
 namespace YunakApp.Services
 {
@@ -159,7 +160,7 @@ namespace YunakApp.Services
 
             foreach (var item in Operations)
             {
-                item.Category = categoriesArray[random.Next(0, 3)];
+                item.Category = categoriesArray[random.Next(0, 4)];
                 var category = Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
                 if (category != null)
                 {
@@ -201,10 +202,10 @@ namespace YunakApp.Services
                 Operations.Add(operation);
             }
 
-            //foreach (var item in Operations)
-            //{
-            //    item.PercentageTotalCostsInCategory = Math.Round(item.Cost / (item.Category.TotalMoney / 100), 2);
-            //}
+            foreach (var item in Operations)
+            {
+                item.PercentageTotalCostsInCategory = Math.Round(item.Cost / (item.Category.TotalMoney / 100), 2);
+            }
 
             return Operations;
         }
@@ -250,6 +251,31 @@ namespace YunakApp.Services
         public async Task<List<Operation>> GetCategoryOperationsAsync(string NameCategory, Models.Type type)
         {
             return await Task.FromResult(Operations.Where(o => o.Category.Type == type && o.Category.Name == NameCategory).OrderByDescending(o => o.Cost).ToList());
+        }
+
+        public async Task AddOperationAsync(string nameCategory, string nameOperation, int cost, DateTime date)
+        {
+            var category = Categories.Where(c => c.Name == nameCategory).FirstOrDefault();
+
+            Operation operation = new Operation()
+            {
+                Cost = cost,
+                Date = date,
+                Category = category
+            };
+
+            Operations.Add(operation);
+        }
+
+        public async Task AddCategoryAsync(string name, Models.Type type)
+        {
+            Category category = new Category()
+            {
+                Name = name,
+                Type = type
+            };
+
+            Categories.Add(category);
         }
     }
 }

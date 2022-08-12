@@ -1,13 +1,10 @@
 ﻿using Rg.Plugins.Popup.Services;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
-using YunakApp.Interface;
 using YunakApp.Models;
-using YunakApp.Repository;
 using YunakApp.Views;
 
 namespace YunakApp.ViewModels
@@ -16,10 +13,6 @@ namespace YunakApp.ViewModels
     {
         #region Property
         readonly EnterPeroidPopupPage EnterPeroidPopupPage;
-
-        private readonly ICategoryRepository _categoryRepository;
-        private readonly IOperationRepository _operationRepository;
-        private readonly IUserRepository _userRepository;
 
         private Button Button;
 
@@ -80,10 +73,6 @@ namespace YunakApp.ViewModels
         {
             EnterPeroidPopupPage = new EnterPeroidPopupPage(this);
 
-            _categoryRepository = new CategoryRepository(DataStore);
-            _operationRepository = new OperationRepository(DataStore);
-            _userRepository = new UserRepository(DataStore);
-
             Button = button;
 
             Categories = new ObservableCollection<Category>();
@@ -99,12 +88,11 @@ namespace YunakApp.ViewModels
 
         private async Task GetData()
         {
-            ///TODO: баг первого запуска, причина в том что вьюшка обновляется а обьекты еще пустые.
             IsRefreshing = true;
 
             UserGeneralInformation = await _userRepository.GetGeneralInformation();
-            await _operationRepository.GetOperationsAsync();
             Categories.Clear();
+
             Categories = await _categoryRepository.GetCategoriesAsync();
             OnPropertyChanged(nameof(Categories));
 
@@ -148,6 +136,7 @@ namespace YunakApp.ViewModels
                 return;
             var nameCategory = category.Name;
             var typeStr = ((int)category.Type).ToString();
+            //Берет данные либо дефолтные(начало и конец месяца) либо измененные в окне внесения периода.
             var dateTimeStartSort = EnterPeroidPopupPage.DateTimeStart;
             var dateTimeEndSort = EnterPeroidPopupPage.DateTimeEnd;
 
@@ -168,7 +157,7 @@ namespace YunakApp.ViewModels
 
         private async void OnButtonClickedAddCategory(object parameter)
         {
-            var page = new AddCategoryPopupPage();
+            var page = new AddCategoryPopupPage(_categoryRepository);
 
             await PopupNavigation.Instance.PushAsync(page);
         }
@@ -182,21 +171,12 @@ namespace YunakApp.ViewModels
         public async Task SortByDateTimeAsync()
         {
             var dateTimeStart = EnterPeroidPopupPage.DateTimeStart.Date;
-            var dateTimeEnd = EnterPeroidPopupPage.DateTimeEnd.Date;
+            var dateTimeEnd = EnterPeroidPopupPage.DateTimeEnd.Date;   
 
-            var operations = await _operationRepository.GetOperationsAsync();
-
-            //TODO: Это выражение нужно сразу отправлять на сервер, либо сортировать что уже есть на телефоне.
-            var sortOperations = DataStore.SortOperations = operations.Where(o => o.Date < dateTimeEnd & o.Date > dateTimeStart).ToList();
             Categories.Clear();
 
-            foreach (var item in sortOperations)
-            {
-                if (!Categories.Any(c => c.Name == item.Category.Name))
-                {
-                    Categories.Add(item.Category);
-                }
-            }
+            Categories = await _categoryRepository.GetCategoriesSortedByDateAsync(dateTimeStart, dateTimeEnd);
+            OnPropertyChanged(nameof(Categories));
         }
     }
 }

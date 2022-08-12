@@ -40,7 +40,7 @@
 
             <FlexLayout Direction="Row" JustifyContent="End" HeightRequest="40">
                 <Frame CornerRadius="10" HasShadow="True" WidthRequest="52" Padding="-1,0,-1,0" Margin="10,0,10,0">
-                    <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" HorizontalOptions="Fill" FontSize="Medium" TextColor="Black" Padding="0,0,0,0" BackgroundColor="#ffffff"/>
+                    <Button x:DataType="local:CategoryViewModel" Command="{Binding AddOperationCommand}" Text="+" HorizontalOptions="Fill" FontSize="Medium" TextColor="Black" Padding="0,0,0,0" BackgroundColor="#ffffff"/>
                 </Frame>
             </FlexLayout>
 
@@ -53,7 +53,7 @@
                             <Frame Margin="10,5,10,0" CornerRadius="10" HasShadow="True" >
                                 <Grid Padding="-4">
                                     <Label Text="{Binding Category.Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
-                                    <Label Text="{Binding Date, StringFormat='{0:dd.mm.yyyy}'}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
+                                    <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
                                     <Label Text="{Binding Cost}" HorizontalTextAlignment="End" TextColor="Black" FontSize="16"/>
                                 </Grid>
                             </Frame>
