@@ -148,19 +148,25 @@ namespace YunakApp.Services
                 Name = "Без категории",
                 Type = Models.Type.consumption
             };
+            Category category5 = new Category()
+            {
+                Name = "Зарплата",
+                Type = Models.Type.income
+            };
 
-            var categoriesArray = new Category[4];
+            var categoriesArray = new Category[5];
             categoriesArray[0] = category1;
             categoriesArray[1] = category2;
             categoriesArray[2] = category3;
             categoriesArray[3] = category4;
+            categoriesArray[4] = category5;
 
             //Высчитываю итоговую сумму на категорию.
             Categories = new List<Category>(categoriesArray);
 
             foreach (var item in Operations)
             {
-                item.Category = categoriesArray[random.Next(0, 4)];
+                item.Category = categoriesArray[random.Next(0, 5)];
                 var category = Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
                 if (category != null)
                 {
@@ -191,7 +197,7 @@ namespace YunakApp.Services
             };
 
             Operations = new List<Operation>();
-            for (int i = 0; i < 38; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Operation operation = new Operation()
                 {

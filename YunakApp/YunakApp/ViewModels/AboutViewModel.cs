@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-
+using Xamarin.Forms.Xaml;
 using Xamarin.Forms;
 using YunakApp.Models;
 using YunakApp.Views;
@@ -15,7 +15,7 @@ namespace YunakApp.ViewModels
         readonly EnterPeroidPopupPage EnterPeroidPopupPage;
 
         private Button Button;
-
+        private Type type;
         public ObservableCollection<Category> Categories { get; set; }
 
         private float progressBarVallue;
@@ -93,7 +93,7 @@ namespace YunakApp.ViewModels
             UserGeneralInformation = await _userRepository.GetGeneralInformation();
             Categories.Clear();
 
-            Categories = await _categoryRepository.GetCategoriesAsync();
+            Categories = await _categoryRepository.GetCategoriesSortedByDateAsync(EnterPeroidPopupPage.DateTimeStart, EnterPeroidPopupPage.DateTimeEnd);
             OnPropertyChanged(nameof(Categories));
 
             IsRefreshing = false;
@@ -144,14 +144,25 @@ namespace YunakApp.ViewModels
             await Shell.Current.GoToAsync(result);
         }
 
-        private void OnButtonClickedSwapIncomeConsumption()
+        private async void OnButtonClickedSwapIncomeConsumption()
         {
             if (Button.Text == "Доходы")
             {
                 Button.Text = "Расходы";
+                type = Type.consumption;
+
+                Categories.Clear();
+
+                Categories = await _categoryRepository.GetCategoriesSortedByDateAsync(type, EnterPeroidPopupPage.DateTimeStart, EnterPeroidPopupPage.DateTimeEnd);
+                OnPropertyChanged(nameof(Categories));
                 return;
             }
 
+            type = Type.income;
+            Categories.Clear();
+
+            Categories = await _categoryRepository.GetCategoriesSortedByDateAsync(type, EnterPeroidPopupPage.DateTimeStart, EnterPeroidPopupPage.DateTimeEnd);
+            OnPropertyChanged(nameof(Categories));
             Button.Text = "Доходы";
         }
 

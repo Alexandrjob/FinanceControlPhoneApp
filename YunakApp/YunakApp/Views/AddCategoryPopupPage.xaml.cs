@@ -1,5 +1,6 @@
 ﻿using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
+using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using YunakApp.Interface;
 using YunakApp.Models;
@@ -21,8 +22,20 @@ namespace YunakApp.Views
 
         private async void Button_Clicked(object sender, System.EventArgs e)
         {
-            await _categoryRepository.AddCategoryAsync(name.Text, type);
+            //Для первой заглявной буквы.
+            //получаем TextInfo для русского языка
+            //var textInfo = new CultureInfo("ru-RU").TextInfo;
+            //преобразуем текст
+            //var capitalizedText = textInfo.ToTitleCase(textInfo.ToLower(text));
+            if(name.Text == default|| name.Text == "" || name.Text == " ")
+            {
+                name.Placeholder = "Введите название";
+                name.PlaceholderColor = Color.Red;
 
+                return;
+            }
+
+            await _categoryRepository.AddCategoryAsync(name.Text, type);
             //Выходим с попапа.
             await PopupNavigation.Instance.PopAsync();
         }

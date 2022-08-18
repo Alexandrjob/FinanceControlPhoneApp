@@ -33,7 +33,7 @@
                         </Picker.Items>
                     </Picker>
 
-                    <Button Clicked="Button_Clicked" Text="Добавить" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="120" HeightRequest="40" HorizontalOptions="End" BorderRadius="10" Padding="10,0,10,0" BorderWidth="2" BorderColor="Black"/>
+                    <Button Clicked="Button_Clicked" Text="Добавить" TextTransform="None" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="120" HeightRequest="40" HorizontalOptions="End" BorderRadius="10" Padding="10,0,10,0" BorderWidth="2" BorderColor="Black"/>
                 </StackLayout>
             </Grid>
         </Frame>

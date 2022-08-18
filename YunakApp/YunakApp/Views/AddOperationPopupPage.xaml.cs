@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
 using Xamarin.Forms.Xaml;
@@ -22,6 +23,16 @@ namespace YunakApp.Views
 
         private async void Button_ClickedAddOperation(object sender, EventArgs e)
         {
+            if (/*name.Text == default || name.Text == "" || name.Text == " " || */cost.Text == default)
+            {
+                name.Placeholder = "Введите название";
+                name.PlaceholderColor = Color.Red;
+
+                cost.PlaceholderColor = Color.Red;
+
+                return;
+            }
+
             await _operationRepository.AddOperationAsync(nameCategory, name.Text, Convert.ToInt32(cost.Text), dateTime.Date);
 
             //Выходим с попапа.

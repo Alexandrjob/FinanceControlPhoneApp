@@ -5,7 +5,12 @@
              xmlns:model="clr-namespace:YunakApp.Models"
              x:Class="YunakApp.Views.AboutPage"
              >
-    <StackLayout>
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Главная страница"
+                 Order="Primary"
+                 Priority="0" />
+    </ContentPage.ToolbarItems>
+    <StackLayout x:Name="MainStackLayout">
         <StackLayout>
             <Frame BackgroundColor="#ffffff" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
                 <Grid HeightRequest="280">
@@ -62,9 +67,27 @@
             </Frame>
         </FlexLayout>
         <RefreshView x:DataType="local:AboutViewModel" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" RefreshColor="Green">
-            <CollectionView 
+            <CollectionView x:Name="CollectionViewA"
                 ItemsSource="{Binding Categories}"
                 SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <ContentView>
+                        <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand">
+                            <Label Text="Список категорий пуст."
+                           Margin="10,25,10,10"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center" />
+                            <Label Text="Спроси у Саши"
+                           FontAttributes="Italic"
+                           FontSize="12"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center" />
+                        </StackLayout>
+                    </ContentView>
+                </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Margin="10,5,10,0" x:DataType="model:Category">
