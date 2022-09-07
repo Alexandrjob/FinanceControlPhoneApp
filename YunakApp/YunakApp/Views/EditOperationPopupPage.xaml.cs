@@ -1,24 +1,28 @@
 ﻿using Rg.Plugins.Popup.Pages;
 using Rg.Plugins.Popup.Services;
-using Xamarin.Forms;
+using System;
+using System.Drawing;
 using Xamarin.Forms.Xaml;
-using YunakApp.Interface;
 using YunakApp.Models;
+using YunakApp.ViewModels;
 
 namespace YunakApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class AddCategoryPopupPage: PopupPage
+    public partial class EditOperationPopupPage : PopupPage
     {
-        readonly ICategoryRepository _categoryRepository;
+        public readonly CategoryViewModel _categoryView;
+        public readonly Operation _operation;
 
-        public AddCategoryPopupPage(ICategoryRepository categoryRepository)
+        public EditOperationPopupPage() { }
+
+        public EditOperationPopupPage(CategoryViewModel categoryView, Operation operation)
         {
             InitializeComponent();
-            _categoryRepository = categoryRepository;
 
-            picker.SelectedIndex = (int)Type.consumption;
-        }       
+            _categoryView = categoryView;
+            _operation = operation;
+        }
 
         private async void Button_Clicked(object sender, System.EventArgs e)
         {
@@ -27,7 +31,11 @@ namespace YunakApp.Views
                 return;
             }
 
-            await _categoryRepository.AddCategoryAsync(name.Text, (Type)picker.SelectedIndex);
+            _operation.Name = name.Text;
+            _operation.Cost = Convert.ToDouble(cost.Text);
+            _operation.Date = dateTime.Date;
+
+            _categoryView.EditOperation(_operation);
             //Выходим с попапа.
             await PopupNavigation.Instance.PopAsync();
         }

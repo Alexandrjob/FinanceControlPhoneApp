@@ -18,21 +18,23 @@
     </pages:PopupPage.Animation>
     <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Fill">
         <Frame Margin="10,60,10,15" Padding="1" CornerRadius="10" HasShadow="True">
-            <Grid HeightRequest="320">
+            <Grid HeightRequest="300">
                 <StackLayout Margin="10">
-                    <Label Text="Название операции" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
-                    <Entry x:Name="name" Placeholder="Введите название" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
+                    <Label Text="Добавление операции" TextColor="Black" FontSize="Medium"/>
+                    <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" Margin="0,4,4,4"/>
+                    <Entry x:Name="name" Placeholder="Название операции" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
+                    <Entry x:Name="cost" Placeholder="Сумма" Keyboard="Numeric" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
 
-                    <Label Text="Потрачено" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
-                    <Entry x:Name="cost" Placeholder="Введите сумму" Keyboard="Numeric" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
-                    
-                    <Label Text="Дата операции" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Small"/>
                     <DatePicker x:Name="dateTime" Format="D" FontSize="Small">
                         <DatePicker.MinimumDate>01/01/2022</DatePicker.MinimumDate>
                         <DatePicker.MaximumDate>01/01/2024</DatePicker.MaximumDate>
                     </DatePicker>
 
-                    <Button Clicked="Button_ClickedAddOperation" Text="Добавить" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" WidthRequest="120" HeightRequest="40" HorizontalOptions="End" BorderRadius="10" Padding="10,0,10,0" BorderWidth="2" BorderColor="Black"/>
+                    <FlexLayout Direction="Row" JustifyContent="End" HeightRequest="40">
+                        <Frame CornerRadius="10" HasShadow="True" WidthRequest="152" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                            <Button Clicked="Button_ClickedAddOperation" Text="Добавить" TextTransform="None" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" HorizontalOptions="Fill" Padding="0,0,0,0"/>
+                        </Frame>
+                    </FlexLayout>
                 </StackLayout>
             </Grid>
         </Frame>

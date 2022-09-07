@@ -1,128 +1,156 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:YunakApp.ViewModels"
-             xmlns:model="clr-namespace:YunakApp.Models"
-             x:Class="YunakApp.Views.AboutPage"
-             >
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:viewModels="clr-namespace:YunakApp.ViewModels"
+             x:Name="AbouttPage"
+             x:Class="YunakApp.Views.AboutPage">
+    <ContentPage.BindingContext>
+        <viewModels:AboutViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="MessageTemplate">
+            <SwipeView Padding="5,0,5,0">
+                <SwipeView.RightItems>
+                    <SwipeItems Mode="Execute">
+                        <SwipeItemView Command="{Binding Path=BindingContext.DeleteCategoryCommand, Source={x:Reference Name=AbouttPage}}" CommandParameter="{Binding .}">
+                            <Frame CornerRadius="10" HasShadow="False" WidthRequest="150" Margin="0" Padding="0" BackgroundColor="red">
+                                <Grid>
+                                    <Label Text="Удалить" TextColor="White" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.RightItems>
+                <SwipeView.LeftItems>
+                    <SwipeItems Mode="Reveal">
+                        <SwipeItemView  WidthRequest="100" Margin="0,0,0,0" Command="{Binding Path=BindingContext.EditCategoryCommand, Source={x:Reference Name=AbouttPage}}" CommandParameter="{Binding .}">
+                            <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#ffffff">
+                                <Grid>
+                                    <Label Text="Изменить" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.LeftItems>
+                <SwipeView.Content>
+                    <Frame Margin="0, 5,0, 5" Padding="20, 15,20, 15" CornerRadius="10" HasShadow="True">
+                        <Grid Padding="-4">
+                            <Label Text="{Binding Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
+                            <Label HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding PercentageTotalCosts}" />
+                                        <Span Text="%"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label HorizontalTextAlignment="End" TextColor="Black" FontSize="16">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding TotalMoney}"/>
+                                        <Span Text="₽"/>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                NumberOfTapsRequired="1"
+                                Command="{Binding Path=BindingContext.ItemTappedCommand, Source={x:Reference Name=AbouttPage}}"		
+                                CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </Frame>
+                </SwipeView.Content>
+            </SwipeView>
+        </DataTemplate>
+    </ContentPage.Resources>
+
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Главная страница"
                  Order="Primary"
-                 Priority="0" />
+                 Priority="0"/>
     </ContentPage.ToolbarItems>
-    <StackLayout x:Name="MainStackLayout">
+
+    <ContentPage.Content>
         <StackLayout>
-            <Frame BackgroundColor="#ffffff" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
-                <Grid HeightRequest="280">
-                    <StackLayout Margin="10" VerticalOptions="CenterAndExpand" x:DataType="local:AboutViewModel" >
-                        <Grid>
-                            <Label Text="Доход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
-                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.MonthlyIncome}"/>
-                                        <Span Text="₽"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-                        <Grid>
-                            <Label Text="Расход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
-                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}"/>
-                                        <Span Text="₽"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-                        <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
-                        <Grid>
-                            <Label Text="Остаток" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
-                            <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
-                                <Label.FormattedText>
-                                    <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.Balance}"/>
-                                        <Span Text="₽"/>
-                                    </FormattedString>
-                                </Label.FormattedText>
-                            </Label>
-                        </Grid>
-                        <ProgressBar x:DataType="local:AboutViewModel" Progress="{Binding ProgressBarVallue}" ProgressColor="Green"
+            <StackLayout>
+                <Frame BackgroundColor="#ffffff" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
+                    <Grid HeightRequest="280">
+                        <StackLayout Margin="10" VerticalOptions="CenterAndExpand">
+                            <Grid>
+                                <Label Text="Доход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                                <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding UserGeneralInformation.MonthlyIncome}"/>
+                                            <Span Text="₽"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                            <Grid>
+                                <Label Text="Расход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                                <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}"/>
+                                            <Span Text="₽"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                            <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" />
+                            <Grid>
+                                <Label Text="Остаток" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
+                                <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="{Binding UserGeneralInformation.Balance}"/>
+                                            <Span Text="₽"/>
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Grid>
+                            <ProgressBar Progress="{Binding ProgressBarVallue}" ProgressColor="Green"
                             HeightRequest="4"/>
-                    </StackLayout>
-                </Grid>
-            </Frame>
-        </StackLayout>
-        <FlexLayout Direction="Row" JustifyContent="SpaceBetween" HeightRequest="40">
-            <Frame CornerRadius="10" HasShadow="True" WidthRequest="100" Padding="-1,0,-1,0" Margin="10,0,10,0">
-                <Button x:DataType="local:AboutViewModel" x:Name="SwapButton" Text="Расходы" TextTransform="None" Command="{Binding SwapCommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
-            </Frame>
-            <Frame CornerRadius="10" HasShadow="True" WidthRequest="90" Padding="-1,0,-1,0" Margin="-110,0,10,0">
-                <Button x:DataType="local:AboutViewModel" Text="Период" TextTransform="None" Command="{Binding SortByDateTimecommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
-            </Frame>
-            <Frame CornerRadius="10" HasShadow="True" WidthRequest="50" Padding="-1,0,-1,0" Margin="10,0,10,0">
-                <Button x:DataType="local:AboutViewModel" Command="{Binding AddCategoryCommand}" Text="+" BackgroundColor="#ffffff" FontSize="Medium" TextColor="Black" BorderRadius="10" Padding="10,0,10,0"/>
-            </Frame>
-        </FlexLayout>
-        <RefreshView x:DataType="local:AboutViewModel" Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" RefreshColor="Green">
-            <CollectionView x:Name="CollectionViewA"
-                ItemsSource="{Binding Categories}"
-                SelectionMode="None">
-                <CollectionView.EmptyView>
-                    <ContentView>
-                        <StackLayout HorizontalOptions="CenterAndExpand"
+                        </StackLayout>
+                    </Grid>
+                </Frame>
+            </StackLayout>
+            <FlexLayout Direction="Row" JustifyContent="SpaceBetween" HeightRequest="40">
+                <Frame CornerRadius="10" HasShadow="True" WidthRequest="100" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                    <Button x:Name="SwapButton" Text="Расходы" TextTransform="None" Command="{Binding Path=BindingContext.SwapCommand, Source={x:Reference Name=AbouttPage}}" CommandParameter="{x:Reference SwapButton}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
+                </Frame>
+                <Frame CornerRadius="10" HasShadow="True" WidthRequest="90" Padding="-1,0,-1,0" Margin="-110,0,10,0">
+                    <Button Text="Период" TextTransform="None" Command="{Binding SortByDateTimeCommand}" BackgroundColor="#ffffff" FontSize="Micro" TextColor="Black" Padding="10" BorderRadius="10"/>
+                </Frame>
+                <Frame CornerRadius="10" HasShadow="True" WidthRequest="50" Padding="-1,0,-1,0" Margin="10,0,10,0">
+                    <Button Text="+" Command="{Binding AddCategoryCommand}" BackgroundColor="#ffffff" FontSize="Medium" TextColor="Black" BorderRadius="10" Padding="10,0,10,0"/>
+                </Frame>
+            </FlexLayout>
+            <RefreshView Command="{Binding LoadDataCommand}" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" RefreshColor="Green">
+                <CollectionView  ItemsSource="{Binding Categories}" ItemTemplate="{StaticResource MessageTemplate}" SelectionMode="None">
+                    <CollectionView.EmptyView>
+                        <ContentView>
+                            <StackLayout HorizontalOptions="CenterAndExpand"
                              VerticalOptions="CenterAndExpand">
-                            <Label Text="Список категорий пуст."
+                                <Label Text="Список категорий пуст."
                            Margin="10,25,10,10"
                            FontAttributes="Bold"
                            FontSize="18"
                            HorizontalOptions="Fill"
                            HorizontalTextAlignment="Center" />
-                            <Label Text="Спроси у Саши"
+                                <Label Text="Проблемы?Спроси у Саши"
                            FontAttributes="Italic"
                            FontSize="12"
                            HorizontalOptions="Fill"
                            HorizontalTextAlignment="Center" />
-                        </StackLayout>
-                    </ContentView>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Margin="10,5,10,0" x:DataType="model:Category">
-                            <Frame Margin="10, 5,10, 0" CornerRadius="10" HasShadow="True">
-                                <Grid Padding="-4">
-                                    <Label Text="{Binding Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
-                                    <Label HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding PercentageTotalCosts}" />
-                                                <Span Text="%"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                    <Label HorizontalTextAlignment="End" TextColor="Black" FontSize="16">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="{Binding TotalMoney}"/>
-                                                <Span Text="₽"/>
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </Grid>
-                            </Frame>
-                            <StackLayout.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:AboutViewModel}} , Path=ItemTappedCommand}"		
-                                CommandParameter="{Binding .}">
-                                </TapGestureRecognizer>
-                            </StackLayout.GestureRecognizers>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
-    </StackLayout>
+                            </StackLayout>
+                        </ContentView>
+                    </CollectionView.EmptyView>
+                </CollectionView>
+            </RefreshView>
+        </StackLayout>
+    </ContentPage.Content>
 </ContentPage>

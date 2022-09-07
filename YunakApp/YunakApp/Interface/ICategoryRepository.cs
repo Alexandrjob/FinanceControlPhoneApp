@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using YunakApp.Models;
@@ -27,8 +28,8 @@ namespace YunakApp.Interface
         /// <param name="type">Тип категории(доход/расход).</param>
         /// <param name="dateTimeStart">Дата начала диапозона.</param>
         /// <param name="dateTimeEnd">Дата конца диапозона.</param>
-        /// <returns><see cref="ObservableCollection{Category}"/><see cref="Category"/></returns>
-        Task<ObservableCollection<Category>> GetCategoriesSortedByDateAsync(Models.Type type, DateTime dateTimeStart, DateTime dateTimeEnd);
+        /// <returns><see cref="List{Category}"/><see cref="Category"/></returns>
+        Task<List<Category>> GetCategoriesSortedByDateAsync(Models.Type type, DateTime dateTimeStart, DateTime dateTimeEnd);
 
         /// <summary>
         /// Добавляет категорию.
@@ -37,5 +38,19 @@ namespace YunakApp.Interface
         /// <param name="type">Тип категории(доход/расход).</param>
         /// <returns></returns>
         Task AddCategoryAsync(string name, Models.Type type);
+
+        /// <summary>
+        /// Редактирует категорию.
+        /// </summary>
+        /// <param name="category">Категория.</param>
+        /// <returns></returns>
+        Task EditCategoryAsync(Category category);
+
+        /// <summary>
+        /// Удаляет категорию.
+        /// </summary>
+        /// <param name="category">Категория.</param>
+        /// <returns></returns>
+        Task DeleteAsync(Category category);
     }
 }

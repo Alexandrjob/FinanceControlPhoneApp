@@ -40,5 +40,7 @@ namespace YunakApp.Interface
         /// <param name="date">Дата соверщения операции.</param>
         /// <returns></returns>
         Task AddOperationAsync(string nameCategory, string nameOperation, int cost, DateTime date);
+        Task DeleteAsync(Operation operation);
+        Task EditOperationAsync(Operation operation);
     }
 }

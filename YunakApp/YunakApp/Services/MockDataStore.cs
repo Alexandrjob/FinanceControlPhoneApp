@@ -8,7 +8,6 @@ using YunakApp.Models;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Linq;
-using Xamarin.Forms;
 
 namespace YunakApp.Services
 {
@@ -130,26 +129,31 @@ namespace YunakApp.Services
 
             Category category1 = new Category()
             {
+                Id = 1,
                 Name = "Транспорт",
                 Type = Models.Type.consumption
             };
             Category category2 = new Category()
             {
+                Id = 2,
                 Name = "Еда",
                 Type = Models.Type.consumption
             };
             Category category3 = new Category()
             {
+                Id = 3,
                 Name = "Ресторан",
                 Type = Models.Type.consumption
             };
             Category category4 = new Category()
             {
+                Id = 4,
                 Name = "Без категории",
                 Type = Models.Type.consumption
             };
             Category category5 = new Category()
             {
+                Id = 5,
                 Name = "Зарплата",
                 Type = Models.Type.income
             };
@@ -166,7 +170,7 @@ namespace YunakApp.Services
 
             foreach (var item in Operations)
             {
-                item.Category = categoriesArray[random.Next(0, 5)];
+                item.Category = categoriesArray[random.Next(0, categoriesArray.Length)];
                 var category = Categories.Where(c => c.Name == item.Category.Name).FirstOrDefault();
                 if (category != null)
                 {
@@ -195,12 +199,15 @@ namespace YunakApp.Services
                 Name = "Без категории",
                 Type = Models.Type.consumption
             };
+            byte count = default;
 
             Operations = new List<Operation>();
             for (int i = 0; i < 100; i++)
             {
+                count++;
                 Operation operation = new Operation()
                 {
+                    Id = count,
                     Cost = random.Next(100, 10000),
                     Date = DateTime.Now.AddDays(random.Next(-30, 30)),
                     Category = category
@@ -262,9 +269,12 @@ namespace YunakApp.Services
         public async Task AddOperationAsync(string nameCategory, string nameOperation, int cost, DateTime date)
         {
             var category = Categories.Where(c => c.Name == nameCategory).FirstOrDefault();
+            var maxId = Operations.Max(o => o.Id);
 
             Operation operation = new Operation()
             {
+                Id = maxId + 1,
+                Name = nameOperation,
                 Cost = cost,
                 Date = date,
                 Category = category
@@ -275,13 +285,49 @@ namespace YunakApp.Services
 
         public async Task AddCategoryAsync(string name, Models.Type type)
         {
+            var maxId = Categories.Max(o => o.Id);
+
             Category category = new Category()
             {
+                Id = maxId +1,
                 Name = name,
                 Type = type
             };
 
             Categories.Add(category);
+        }
+
+        public async Task DeleteCategoryAsync(Category category)
+        {
+            Categories.Remove(category);
+
+            var sortOperations = Operations.Where(o => o.Category == category).ToList();
+            foreach (var item in sortOperations)
+            {
+                Operations.Remove(item);
+            }
+        }
+
+        public async Task EditCategoryAsync(Category category)
+        {
+            var cat = Categories.Where(c => c.Id == category.Id).FirstOrDefault();
+            //Ахуеть, работает...
+            cat.Name = category.Name;
+            cat.Type = category.Type;
+        }
+
+        public async Task DeleteOperationAsync(Operation operation)
+        {
+            Operations.Remove(operation);
+        }
+
+        public async Task EditOperationAsync(Operation operation)
+        {
+            var op = Operations.Where(c => c.Id == operation.Id).FirstOrDefault();
+            //Ахуеть, работает...
+            op.Name = operation.Name;
+            op.Cost = operation.Cost;
+            op.Date = operation.Date;
         }
     }
 }

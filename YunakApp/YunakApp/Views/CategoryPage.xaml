@@ -1,20 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:YunakApp.ViewModels"
              xmlns:local="clr-namespace:YunakApp.ViewModels"
-             xmlns:model="clr-namespace:YunakApp.Models"
+             x:Name="CategoryyPage"
              x:Class="YunakApp.Views.CategoryPage">
+    <ContentPage.BindingContext>
+        <viewModels:CategoryViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <DataTemplate x:Key="OperationTemplate">
+            <SwipeView Padding="5,0,5,0">
+                <SwipeView.RightItems>
+                    <SwipeItems Mode="Execute">
+                        <SwipeItemView Command="{Binding Path=BindingContext.DeleteOperationCommand, Source={x:Reference Name=CategoryyPage}}" CommandParameter="{Binding .}">
+                            <Frame CornerRadius="10" HasShadow="False" WidthRequest="150" Margin="0" Padding="0" BackgroundColor="red">
+                                <Grid>
+                                    <Label Text="Удалить" TextColor="White" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.RightItems>
+                <SwipeView.LeftItems>
+                    <SwipeItems Mode="Reveal">
+                        <SwipeItemView  WidthRequest="100" Margin="0,0,0,0" Command="{Binding Path=BindingContext.EditOperationCommand, Source={x:Reference Name=CategoryyPage}}" CommandParameter="{Binding .}">
+                            <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#ffffff">
+                                <Grid>
+                                    <Label Text="Изменить" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Grid>
+                            </Frame>
+                        </SwipeItemView>
+                    </SwipeItems>
+                </SwipeView.LeftItems>
+                <SwipeView.Content>
+                    <Frame Margin="0, 5,0, 5" Padding="20, 15,20, 15" CornerRadius="10" HasShadow="True">
+                        <Grid Padding="-4">
+                            <Label Text="{Binding Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
+                            <Label Text="{Binding Date, StringFormat='{0:dd.MM}'}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
+                            <Label Text="{Binding Cost}" HorizontalTextAlignment="End" TextColor="Black" FontSize="16"/>
+                        </Grid>
+                    </Frame>
+                </SwipeView.Content>
+            </SwipeView>
+        </DataTemplate>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <StackLayout>
             <ContentView>
                 <Frame BackgroundColor="#ffffff" HeightRequest="150" Margin="10,20,10,15" Padding="1" CornerRadius="10" HasShadow="True">
-                    <StackLayout Margin="10" VerticalOptions="CenterAndExpand" x:DataType="local:AboutViewModel" >
+                    <StackLayout Margin="10" VerticalOptions="CenterAndExpand">
                         <Grid>
                             <Label x:Name="LabelType" Text="Расход/Доход" HorizontalTextAlignment="Start" TextColor="Black" FontSize="Medium"/>
                             <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.MonthlyConsumption}"/>
+                                        <Span Text="{Binding _category.TotalMoney}"/>
                                         <Span Text="₽"/>
                                     </FormattedString>
                                 </Label.FormattedText>
@@ -26,14 +69,12 @@
                             <Label  HorizontalTextAlignment="End" TextColor="Black" FontSize="Medium">
                                 <Label.FormattedText>
                                     <FormattedString>
-                                        <Span Text="{Binding UserGeneralInformation.Balance}"/>
+                                        <Span Text="{Binding rest}"/>
                                         <Span Text="₽"/>
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
                         </Grid>
-                        <ProgressBar x:Name="ProgressBarBalance" x:DataType="local:AboutViewModel" Progress="{Binding ProgressBarVallue}" ProgressColor="#ffafff"
-                            HeightRequest="4"/>
                     </StackLayout>
                 </Frame>
             </ContentView>
@@ -45,22 +86,29 @@
             </FlexLayout>
 
             <CollectionView
+                ItemTemplate="{StaticResource OperationTemplate}"
                 ItemsSource="{Binding Operations}"
                 SelectionMode="None">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <StackLayout Margin="10,5,10,0" x:DataType="model:Operation">
-                            <Frame Margin="10,5,10,0" CornerRadius="10" HasShadow="True" >
-                                <Grid Padding="-4">
-                                    <Label Text="{Binding Category.Name}" HorizontalTextAlignment="Start" TextColor="Black" FontSize="16"/>
-                                    <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" HorizontalTextAlignment="End" Margin="0,0,80,0"  TextColor="Black" FontSize="16"/>
-                                    <Label Text="{Binding Cost}" HorizontalTextAlignment="End" TextColor="Black" FontSize="16"/>
-                                </Grid>
-                            </Frame>
+                <CollectionView.EmptyView>
+                    <ContentView>
+                        <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="CenterAndExpand">
+                            <Label Text="Список операций пуст."
+                           Margin="10,25,10,10"
+                           FontAttributes="Bold"
+                           FontSize="18"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center" />
+                            <Label Text="Проблемы?Спроси у Саши"
+                           FontAttributes="Italic"
+                           FontSize="12"
+                           HorizontalOptions="Fill"
+                           HorizontalTextAlignment="Center" />
                         </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
+                    </ContentView>
+                </CollectionView.EmptyView>
             </CollectionView>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

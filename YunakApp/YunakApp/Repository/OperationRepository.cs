@@ -50,5 +50,15 @@ namespace YunakApp.Repository
         {
             await DataStore.AddOperationAsync(nameCategory, nameOperation, cost, date);
         }
+
+        public async Task EditOperationAsync(Operation operation)
+        {
+            await DataStore.EditOperationAsync(operation);
+        }
+
+        public async Task DeleteAsync(Operation operation)
+        {
+            await DataStore.DeleteOperationAsync(operation);
+        }
     }
 }

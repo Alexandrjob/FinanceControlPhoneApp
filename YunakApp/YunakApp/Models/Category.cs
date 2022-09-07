@@ -5,6 +5,7 @@
     /// </summary>
     public class Category
     {
+        public int Id { get; set; }
         /// <summary>
         /// Название категории.
         /// </summary>

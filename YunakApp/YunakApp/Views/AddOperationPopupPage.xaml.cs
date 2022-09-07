@@ -23,13 +23,8 @@ namespace YunakApp.Views
 
         private async void Button_ClickedAddOperation(object sender, EventArgs e)
         {
-            if (/*name.Text == default || name.Text == "" || name.Text == " " || */cost.Text == default)
+            if (IsNotValidation())
             {
-                name.Placeholder = "Введите название";
-                name.PlaceholderColor = Color.Red;
-
-                cost.PlaceholderColor = Color.Red;
-
                 return;
             }
 
@@ -37,6 +32,26 @@ namespace YunakApp.Views
 
             //Выходим с попапа.
             await PopupNavigation.Instance.PopAsync();
+        }
+
+        private bool IsNotValidation()
+        {
+            if (name.Text == default || name.Text == "" || name.Text == " " || cost.Text == default)
+            {
+                name.Placeholder = "Введите название";
+                name.PlaceholderColor = Color.Red;
+
+                return true;
+            }
+            if (cost.Text == default)
+            {
+                cost.Placeholder = "введите сумму";
+                cost.PlaceholderColor = Color.Red;
+
+                return true;
+            }
+
+            return false;
         }
 
         protected override bool OnBackgroundClicked()

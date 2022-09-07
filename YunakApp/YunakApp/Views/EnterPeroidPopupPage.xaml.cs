@@ -14,7 +14,7 @@ namespace YunakApp.Views
 
         readonly AboutViewModel AboutView;
 
-        public EnterPeroidPopupPage(AboutViewModel aboutview)
+        public EnterPeroidPopupPage(AboutViewModel aboutView)
         {
             DateTime now = DateTime.Now;
             DateTimeStart = new DateTime(now.Year, now.Month, 1);
@@ -25,7 +25,7 @@ namespace YunakApp.Views
             dateTimeStart.Date = DateTimeStart;
             dateTimeEnd.Date = DateTimeEnd;
 
-            AboutView = aboutview;
+            AboutView = aboutView;
         }
 
         private async void Button_Clicked(object sender, EventArgs e)

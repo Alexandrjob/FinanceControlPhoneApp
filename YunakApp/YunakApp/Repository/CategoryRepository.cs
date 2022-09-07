@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,11 +50,11 @@ namespace YunakApp.Repository
             return categories;
         }
 
-        public async Task<ObservableCollection<Category>> GetCategoriesSortedByDateAsync(Models.Type type, DateTime dateTimeStart, DateTime dateTimeEnd)
+        public async Task<List<Category>> GetCategoriesSortedByDateAsync(Models.Type type, DateTime dateTimeStart, DateTime dateTimeEnd)
         {
             var sortOperations = DataStore.GetOperations().Where(o => o.Date < dateTimeEnd & o.Date > dateTimeStart).ToList();
 
-            ObservableCollection<Category> sortCategories = new ObservableCollection<Category>();
+            List<Category> sortCategories = new List<Category>();
 
             foreach (var item in sortOperations)
             {
@@ -70,7 +71,7 @@ namespace YunakApp.Repository
 
             }
 
-            return sortCategories;
+            return sortCategories.OrderByDescending(c => c.TotalMoney).ToList();
         }
 
         public async Task AddCategoryAsync(string name, Models.Type type)
@@ -79,6 +80,16 @@ namespace YunakApp.Repository
 
             ///TODO: Необхожимые действия для того чтобы созданная категория отображалась в списке(Причина в том что список категорий получается путем сортировки операций).
             await DataStore.AddOperationAsync(name, "Defoult", 0, DateTime.Now);
+        }
+
+        public async Task DeleteAsync(Category category)
+        {
+            await DataStore.DeleteCategoryAsync(category);
+        }
+
+        public async Task EditCategoryAsync(Category category)
+        {
+            await DataStore.EditCategoryAsync(category);
         }
     }
 }

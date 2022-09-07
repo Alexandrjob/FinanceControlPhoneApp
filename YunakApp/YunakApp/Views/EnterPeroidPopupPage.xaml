@@ -19,22 +19,22 @@
     <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="Fill">
         <Frame Margin="10,60,10,15" Padding="1" CornerRadius="10" HasShadow="True">
             <Grid HeightRequest="300">
-                <StackLayout>
-                    <Label Text="Выбор периода" TextColor="Black" FontSize="Medium" Margin="10,10,0,0"/>
-                    <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" Margin="4"/>
+                <StackLayout Margin="10">
+                    <Label Text="Выбор периода" TextColor="Black" FontSize="Medium"/>
+                    <BoxView Color="Gray" HeightRequest="2" HorizontalOptions="Fill" Margin="0,4,4,4"/>
                     <Label Text="Начало периода" FontSize="Small"/>
-                    <DatePicker x:Name="dateTimeStart" Format="D" FontSize="Small" Date="{Binding DateTimeStart}">
+                    <DatePicker x:Name="dateTimeStart" Format="D" FontSize="Small">
                         <DatePicker.MinimumDate>01/01/2022</DatePicker.MinimumDate>
                         <DatePicker.MaximumDate>01/01/2024</DatePicker.MaximumDate>
                     </DatePicker>
                     <Label Text="Конец периода" FontSize="Small" />
-                    <DatePicker x:Name="dateTimeEnd" Format="D" FontSize="Small" Date="{Binding DateTimeEnd}">
+                    <DatePicker x:Name="dateTimeEnd" Format="D" FontSize="Small">
                         <DatePicker.MinimumDate>01/01/2022</DatePicker.MinimumDate>
                         <DatePicker.MaximumDate>01/01/2024</DatePicker.MaximumDate>
                     </DatePicker>
                     <FlexLayout Direction="Row" JustifyContent="End" HeightRequest="40">
                         <Frame CornerRadius="10" HasShadow="True" WidthRequest="152" Padding="-1,0,-1,0" Margin="10,0,10,0">
-                            <Button Clicked="Button_Clicked" Text="Выбрать" TextTransform="None" HorizontalOptions="Fill" FontSize="Small" TextColor="Black" Padding="0,0,0,0" BackgroundColor="#ffffff"/>
+                            <Button Clicked="Button_Clicked" Text="Выбрать" TextTransform="None" HorizontalOptions="Fill" FontSize="Micro" TextColor="Black" Padding="0,0,0,0" BackgroundColor="#ffffff"/>
                         </Frame>
                     </FlexLayout>
                 </StackLayout>
