@@ -5,7 +5,7 @@ FinanceControlPhoneApp this app is for controlling finances.
 ## ✨ Demo
 
 <p align="center">
-  <img align="center" src="https://github.com/Alexandrjob/FinanceControlPhoneApp/gif/demo.gif"/>
+  <img height="600" width="310" src="https://github.com/Alexandrjob/FinanceControlPhoneApp/blob/master/gif/demo.gif"/>
 </p>
 
 ## Installation
