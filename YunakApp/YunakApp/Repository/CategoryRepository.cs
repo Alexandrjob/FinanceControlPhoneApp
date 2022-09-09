@@ -79,7 +79,7 @@ namespace YunakApp.Repository
             await DataStore.AddCategoryAsync(name, type);
 
             ///TODO: Необхожимые действия для того чтобы созданная категория отображалась в списке(Причина в том что список категорий получается путем сортировки операций).
-            await DataStore.AddOperationAsync(name, "Defoult", 0, DateTime.Now);
+            await DataStore.AddOperationAsync(name, "Default", 0, DateTime.Now);
         }
 
         public async Task DeleteAsync(Category category)
